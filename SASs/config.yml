@@ -1,0 +1,15 @@
+component: 
+    name: monitoring
+    property: server
+    monitoring_host: 141.76.18.198 #monitoring server address
+prometheus:
+    scrape_interval: 30
+SNMP:
+    polling_interval: 30
+
+    #other:
+#    preprocessing_queue:
+#        - preprocessing.scale_and_center
+#        - preprocessing.dot_reduction
+#        - preprocessing.connect_lines
+#    use_anonymous: yes

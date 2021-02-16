@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+    haproxy-Service:
+        image: haproxytech/haproxy-debian:2.0
+       # build: .
+        ports:
+            - "80:80"
+            - "443:443"
+#            - "9999:9999"
+        networks: 
+            - back-tier
+        volumes:
+            - /etc/haproxy/:/etc/haproxy/
+            - /var/run:/var/run:rw
+        dns: 127.0.0.11
+        deploy:
+            mode: replicated
+            replicas: 1
+        ulimits:
+            nproc: 65535
+            nofile:
+                soft: 65535
+                hard: 65535
+    web-Service:
+        image: mehmoodsaleem/custom-nginx-php
+      # build: .
+    #    ports:
+    #    - "80:80"
+        networks: 
+            - back-tier
+        deploy:
+            replicas: 1
+        ulimits:
+            nproc: 65535
+            nofile:
+                soft: 65535
+                hard: 65535
+ #   prom_client-Service:
+ #       image: mehmoodsaleem/prom_client
+        # build: .
+ #       ports:
+ #           - "8000:8000"
+    #    deploy:
+    #        mode: global
+ #       networks: 
+ #           - back-tier        
+
+#    cadvisor:
+#        image: google/cadvisor
+#        container_name: cadvisor
+ #       expose:
+ #           - "8080"
+#        ports:
+#            - target: 8080
+#              mode: host
+#            - 30001:8080
+#        network_mode: "host"
+#        deploy:
+#            mode: global
+            #replicas: 1
+#        command:
+#            - --docker_only=true
+        #networks: host
+#        labels:
+#            - "prometheus-job=cadvisor"
+#        volumes:
+#            - /:/rootfs:ro
+#            - /var/run:/var/run
+#            - /sys:/sys:ro
+#            - /var/lib/docker:/var/lib/docker:ro
+#            - /var/run/docker.sock:/var/run/docker.sock:rw
+networks:
+    back-tier:
+        driver: overlay
+        attachable: true
