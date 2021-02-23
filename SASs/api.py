@@ -21,21 +21,20 @@ def create_task():
     if not request.json:
         logging.error('Cannot recognise json')
         abort(400)
+    print(request.json)
     if request.json[0]['labels']['alertname'] == 'DefaultRequestWeb':
         logging.info('Default Alerts')
         stream = os.popen('docker service scale stack_web-Service=1')
         output = stream.read()
         stream = os.popen('docker service scale stack_cadvisor=1')
         output = stream.read()
-        logging.info(output)
 
-    elif request.json[0]['labels']['alertname'] == 'CPUHighAlert':
+    elif request.json[0]['labels']['alertname'] == 'HighRequestWeb':
         stream = os.popen('docker service scale stack_web-Service=2')
         output = stream.read()
         stream = os.popen('docker service scale stack_cadvisor=2')
         output = stream.read()
         logging.info('High Load')
-        logging.info(output)
 
     return jsonify(request.json), 201
 
