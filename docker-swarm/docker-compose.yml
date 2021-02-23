@@ -46,30 +46,27 @@ services:
  #       networks: 
  #           - back-tier        
 
-#    cadvisor:
-#        image: google/cadvisor
-#        container_name: cadvisor
- #       expose:
- #           - "8080"
-#        ports:
-#            - target: 8080
-#              mode: host
-#            - 30001:8080
-#        network_mode: "host"
-#        deploy:
-#            mode: global
-            #replicas: 1
-#        command:
-#            - --docker_only=true
+    cadvisor:
+        image: google/cadvisor
+        container_name: cadvisor
+        ports:
+            - target: 8080
+              mode: host
+              published: 8040
+        network_mode: "host"
+        deploy:
+            mode: replicated
+        command:
+            - --docker_only=true
         #networks: host
-#        labels:
-#            - "prometheus-job=cadvisor"
-#        volumes:
-#            - /:/rootfs:ro
-#            - /var/run:/var/run
-#            - /sys:/sys:ro
-#            - /var/lib/docker:/var/lib/docker:ro
-#            - /var/run/docker.sock:/var/run/docker.sock:rw
+                labels:
+            - "prometheus-job=cadvisor"
+                volumes:
+            - /:/rootfs:ro
+            - /var/run:/var/run
+            - /sys:/sys:ro
+            - /var/lib/docker:/var/lib/docker:ro
+            - /var/run/docker.sock:/var/run/docker.sock:rw
 networks:
     back-tier:
         driver: overlay

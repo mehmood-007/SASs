@@ -1,12 +1,19 @@
-The Docker setup for PHP applications using PHP7-FPM and Nginx described in http://geekyplatypus.com/dockerise-your-php-application-with-nginx-and-php7-fpm
 
 ## Instructions
-1. Checkout the repository
-* ~~Create a record in your `hosts` file to point `php-docker.local` to your Docker environment~~
-* Run `docker-compose up`
-* ~~Navigate to php-docker.local:8080 in a browser~~
-* Navigate to localhost:8080
+The repository contains prometheus configurations, alert rules, nginx configs and python api to trigger alerts based on the rules  
 
-That's it! You have your local PHP setup using Docker
+* Currently,  cAdvisor cluster execute at docker cluster using following command:
+`docker service create --name cadvisor -l prometheus-job=cadvisor \
+--mode=global --publish published=8040,target=8080,mode=host \
+--mount type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock,ro \
+--mount type=bind,src=/,dst=/rootfs,ro \
+--mount type=bind,src=/var/run,dst=/var/run \
+--mount type=bind,src=/sys,dst=/sys,ro \
+--mount type=bind,src=/var/lib/docker,dst=/var/lib/docker,ro \
+google/cadvisor -docker_only`
 
-*Example of activated PHP logging* - https://github.com/mikechernev/dockerised-php/tree/feature/log-to-stdout
+* So far currently, docker cluster manage through docker-cli, therefore python API must be executed at swarm cluster manager using following command:
+`python3 api.py`
+
+* deploy docker cluster through docker compose
+`docker stack deploy stack`
